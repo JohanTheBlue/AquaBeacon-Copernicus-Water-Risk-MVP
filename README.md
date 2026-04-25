@@ -1,4 +1,7 @@
 # AquaBeacon
+## Dashboard Preview
+
+![AquaBeacon dashboard](screenshots/aquabeacon_dashboard.png)
 
 **AquaBeacon** is a lightweight Copernicus-based early-warning MVP for water-related environmental risk.
 
