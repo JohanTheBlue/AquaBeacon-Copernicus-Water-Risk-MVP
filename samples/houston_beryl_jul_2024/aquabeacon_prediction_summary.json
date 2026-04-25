@@ -1,0 +1,99 @@
+{
+  "event_id": "houston_beryl_jul_2024",
+  "aoi": {
+    "name": "Houston Hurricane Beryl urban flood AOI",
+    "bbox": {
+      "west": -95.45,
+      "south": 29.68,
+      "east": -95.25,
+      "north": 29.85
+    }
+  },
+  "prediction_type": "historical-plus-live rule-based water-risk prediction prototype",
+  "collection": "SENTINEL2_L2A",
+  "baseline_period": [
+    "2024-06-10",
+    "2024-06-30"
+  ],
+  "recent_period": [
+    "2024-07-01",
+    "2024-07-07"
+  ],
+  "historical_risk": {
+    "label": "High",
+    "score": 2,
+    "source": "Houston is highlighted as a major high-risk flood city in AP flood-risk reporting; urban Gulf Coast flood exposure context."
+  },
+  "live_inputs": {
+    "forecast_rain_mm": 80.0,
+    "sentinel1_surface_water_change_percent": 5.0000052659072525
+  },
+  "indicators": {
+    "delta_ndvi": {
+      "description": "Recent NDVI minus baseline NDVI",
+      "mean": 0.005605554673820734,
+      "stats": {
+        "file": "samples/houston_beryl_jul_2024/delta_ndvi/openEO.tif",
+        "min": -0.9120970964431763,
+        "max": 0.8599147200584412,
+        "mean": 0.005605554673820734,
+        "std": 0.17045198380947113,
+        "p05": -0.2858423888683319,
+        "p50": 0.002765148878097534,
+        "p95": 0.3108762204647064,
+        "width": 1973,
+        "height": 1925,
+        "bounds": {
+          "left": 262910.0,
+          "bottom": 3285440.0,
+          "right": 282640.0,
+          "top": 3304690.0
+        },
+        "crs": "EPSG:32615"
+      }
+    },
+    "delta_ndmi": {
+      "description": "Recent NDMI minus baseline NDMI",
+      "mean": -0.0048047276213765144,
+      "stats": {
+        "file": "samples/houston_beryl_jul_2024/delta_ndmi/openEO.tif",
+        "min": -0.5956114530563354,
+        "max": 0.5676539540290833,
+        "mean": -0.0048047276213765144,
+        "std": 0.06236981227993965,
+        "p05": -0.10606905817985535,
+        "p50": -0.004935767501592636,
+        "p95": 0.09569282084703445,
+        "width": 1973,
+        "height": 1925,
+        "bounds": {
+          "left": 262910.0,
+          "bottom": 3285440.0,
+          "right": 282640.0,
+          "top": 3304690.0
+        },
+        "crs": "EPSG:32615"
+      }
+    }
+  },
+  "prediction": {
+    "risk_score": 6,
+    "predicted_risk_level": "High",
+    "reasons": [
+      "AOI has high historical flood exposure, but this only increases concern when active triggers are present.",
+      "Rainfall exceeds 20 mm, indicating a possible water-risk trigger.",
+      "Rainfall exceeds 40 mm, indicating a stronger water-risk trigger.",
+      "Rainfall exceeds 75 mm, indicating an extreme rainfall trigger.",
+      "Historical AOI exposure contributes 2 points because an active rainfall trigger is present.",
+      "Sentinel-1 shows possible surface-water-change candidates during a rainfall-triggered event window."
+    ]
+  },
+  "outputs": {
+    "delta_ndvi_tif": "samples/houston_beryl_jul_2024/delta_ndvi/openEO.tif",
+    "delta_ndmi_tif": "samples/houston_beryl_jul_2024/delta_ndmi/openEO.tif",
+    "sentinel1_summary_json": "samples/houston_beryl_jul_2024/sentinel1/sentinel1_surface_water_summary.json",
+    "summary_json": "samples/houston_beryl_jul_2024/aquabeacon_prediction_summary.json"
+  },
+  "known_event": true,
+  "explanation": "This prototype combines a historical AOI risk baseline with live/recent Copernicus-derived vegetation and moisture anomalies, rainfall input, and Sentinel-1 surface-water-change evidence. It outputs a Low/Medium/High rule-based predicted water-risk level."
+}

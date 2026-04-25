@@ -1,0 +1,58 @@
+[
+  {
+    "event_id": "budapest_parliament_aug_2024_no_flood_control",
+    "aoi_name": "Budapest Parliament Danube no-flood control AOI",
+    "known_event": false,
+    "historical_risk": "High",
+    "historical_score": 2,
+    "rainfall_mm": 0.0,
+    "sentinel1_surface_water_change_percent": 5.000383991980631,
+    "delta_ndvi_mean": 0.06319428235292435,
+    "delta_ndmi_mean": -0.0917254239320755,
+    "risk_score": 0,
+    "predicted_risk_level": "Low",
+    "reasons": "AOI has high historical flood exposure, but this only increases concern when active triggers are present. | No rainfall trigger is present, so historical exposure and satellite changes are treated as context rather than active flood-risk evidence."
+  },
+  {
+    "event_id": "budapest_parliament_sep_2024",
+    "aoi_name": "Budapest Parliament Danube flood AOI",
+    "known_event": true,
+    "historical_risk": "High",
+    "historical_score": 2,
+    "rainfall_mm": 35.0,
+    "sentinel1_surface_water_change_percent": 5.000383991980631,
+    "delta_ndvi_mean": -0.0010659315157681704,
+    "delta_ndmi_mean": -0.01494662370532751,
+    "risk_score": 4,
+    "predicted_risk_level": "Medium",
+    "reasons": "AOI has high historical flood exposure, but this only increases concern when active triggers are present. | Rainfall exceeds 20 mm, indicating a possible water-risk trigger. | Historical AOI exposure contributes 2 points because an active rainfall trigger is present. | Sentinel-1 shows possible surface-water-change candidates during a rainfall-triggered event window."
+  },
+  {
+    "event_id": "houston_beryl_jul_2024",
+    "aoi_name": "Houston Hurricane Beryl urban flood AOI",
+    "known_event": true,
+    "historical_risk": "High",
+    "historical_score": 2,
+    "rainfall_mm": 80.0,
+    "sentinel1_surface_water_change_percent": 5.0000052659072525,
+    "delta_ndvi_mean": 0.005605554673820734,
+    "delta_ndmi_mean": -0.0048047276213765144,
+    "risk_score": 6,
+    "predicted_risk_level": "High",
+    "reasons": "AOI has high historical flood exposure, but this only increases concern when active triggers are present. | Rainfall exceeds 20 mm, indicating a possible water-risk trigger. | Rainfall exceeds 40 mm, indicating a stronger water-risk trigger. | Rainfall exceeds 75 mm, indicating an extreme rainfall trigger. | Historical AOI exposure contributes 2 points because an active rainfall trigger is present. | Sentinel-1 shows possible surface-water-change candidates during a rainfall-triggered event window."
+  },
+  {
+    "event_id": "houston_jun_2024_no_flood_control",
+    "aoi_name": "Houston no-flood control AOI",
+    "known_event": false,
+    "historical_risk": "High",
+    "historical_score": 2,
+    "rainfall_mm": 0.0,
+    "sentinel1_surface_water_change_percent": 5.000019747105403,
+    "delta_ndvi_mean": -0.056597381830215454,
+    "delta_ndmi_mean": 0.009977160021662712,
+    "risk_score": 0,
+    "predicted_risk_level": "Low",
+    "reasons": "AOI has high historical flood exposure, but this only increases concern when active triggers are present. | No rainfall trigger is present, so historical exposure and satellite changes are treated as context rather than active flood-risk evidence."
+  }
+]

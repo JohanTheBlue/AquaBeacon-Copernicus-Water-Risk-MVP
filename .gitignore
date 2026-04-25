@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+
+# OS/editor
+.DS_Store
+.idea/
+.vscode/
+
+# Temporary outputs
+*.log
+.ipynb_checkpoints/
+
+# Secrets / local auth
+.env
+*.token
+*.key
+
+# Large or old local job outputs
+*_output/
+ndvi_output/
+sentinel1_output/
+aquabeacon_prediction_output/
+
+# openEO/local job IDs
+*_job_id.txt
+sentinel1_job_id.txt

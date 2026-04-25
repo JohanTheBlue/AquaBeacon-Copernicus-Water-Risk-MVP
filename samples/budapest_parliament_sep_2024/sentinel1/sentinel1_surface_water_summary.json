@@ -1,0 +1,44 @@
+{
+  "event_id": "budapest_parliament_sep_2024",
+  "aoi": {
+    "name": "Budapest Parliament Danube flood AOI",
+    "bbox": {
+      "west": 18.99,
+      "south": 47.49,
+      "east": 19.06,
+      "north": 47.53
+    }
+  },
+  "collection": "SENTINEL1_GRD",
+  "indicator": "Sentinel-1 VV backscatter change",
+  "before_period": [
+    "2024-09-01",
+    "2024-09-13"
+  ],
+  "after_period": [
+    "2024-09-14",
+    "2024-09-24"
+  ],
+  "threshold_method": "5th percentile of VV delta",
+  "threshold_value": -0.2798530161380768,
+  "possible_surface_water_change_percent": 5.000383991980631,
+  "mean_candidate_change": -0.8784595131874084,
+  "min_candidate_change": -47.41599655151367,
+  "outputs": {
+    "delta_raster": "samples/budapest_parliament_sep_2024/sentinel1/openEO.tif",
+    "candidate_mask": "samples/budapest_parliament_sep_2024/sentinel1/sentinel1_surface_water_mask.tif",
+    "summary_json": "samples/budapest_parliament_sep_2024/sentinel1/sentinel1_surface_water_summary.json"
+  },
+  "raster": {
+    "width": 539,
+    "height": 459,
+    "bounds": {
+      "left": 348590.0,
+      "bottom": 5261440.0,
+      "right": 353980.0,
+      "top": 5266030.0
+    },
+    "crs": "EPSG:32634"
+  },
+  "explanation": "Pixels with the strongest negative Sentinel-1 VV backscatter change between the before and after periods are flagged as possible surface-water-change candidates. This is not a confirmed flood map."
+}

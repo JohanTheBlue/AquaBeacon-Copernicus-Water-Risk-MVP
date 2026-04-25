@@ -1,0 +1,50 @@
+[
+  {
+    "event_id": "houston_jun_2024_no_flood_control",
+    "aoi_name": "Houston no-flood control AOI",
+    "bbox": {
+      "west": -95.45,
+      "south": 29.68,
+      "east": -95.25,
+      "north": 29.85
+    },
+    "event_date": "2024-06-20",
+    "event_context": {
+      "type": "no_detected_flood_control",
+      "description": "Same Houston urban AOI during a pre-Beryl control period. This sample is intended as a no-flood comparison against the Hurricane Beryl flood-impact sample.",
+      "source_notes": [
+        "Control sample selected before the Hurricane Beryl event window, using the same Houston AOI."
+      ],
+      "source_urls": []
+    },
+    "event_label": {
+      "event_type": "no-flood control",
+      "known_flood_event": false,
+      "control_sample": true,
+      "display_label": "Houston no-flood control"
+    },
+    "baseline_period": [
+      "2024-05-15",
+      "2024-05-31"
+    ],
+    "recent_period": [
+      "2024-06-10",
+      "2024-06-25"
+    ],
+    "sentinel1_before_period": [
+      "2024-05-15",
+      "2024-05-31"
+    ],
+    "sentinel1_after_period": [
+      "2024-06-10",
+      "2024-06-25"
+    ],
+    "historical_risk": {
+      "label": "High",
+      "score": 2,
+      "source": "Same Houston urban Gulf Coast flood-exposure context as the Hurricane Beryl sample, but during a no-detected-flood control period."
+    },
+    "rainfall_mm": 0.0,
+    "known_event": false
+  }
+]

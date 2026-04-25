@@ -1,0 +1,95 @@
+{
+  "event_id": "houston_jun_2024_no_flood_control",
+  "aoi": {
+    "name": "Houston no-flood control AOI",
+    "bbox": {
+      "west": -95.45,
+      "south": 29.68,
+      "east": -95.25,
+      "north": 29.85
+    }
+  },
+  "prediction_type": "historical-plus-live rule-based water-risk prediction prototype",
+  "collection": "SENTINEL2_L2A",
+  "baseline_period": [
+    "2024-05-15",
+    "2024-05-31"
+  ],
+  "recent_period": [
+    "2024-06-10",
+    "2024-06-25"
+  ],
+  "historical_risk": {
+    "label": "High",
+    "score": 2,
+    "source": "Same Houston urban Gulf Coast flood-exposure context as the Hurricane Beryl sample, but during a no-detected-flood control period."
+  },
+  "live_inputs": {
+    "forecast_rain_mm": 0.0,
+    "sentinel1_surface_water_change_percent": 5.000019747105403
+  },
+  "indicators": {
+    "delta_ndvi": {
+      "description": "Recent NDVI minus baseline NDVI",
+      "mean": -0.056597381830215454,
+      "stats": {
+        "file": "samples/houston_jun_2024_no_flood_control/delta_ndvi/openEO.tif",
+        "min": -0.9296261072158813,
+        "max": 0.8468480706214905,
+        "mean": -0.056597381830215454,
+        "std": 0.18457679450511932,
+        "p05": -0.44955068826675415,
+        "p50": -0.016763776540756226,
+        "p95": 0.17947915196418762,
+        "width": 1973,
+        "height": 1925,
+        "bounds": {
+          "left": 262910.0,
+          "bottom": 3285440.0,
+          "right": 282640.0,
+          "top": 3304690.0
+        },
+        "crs": "EPSG:32615"
+      }
+    },
+    "delta_ndmi": {
+      "description": "Recent NDMI minus baseline NDMI",
+      "mean": 0.009977160021662712,
+      "stats": {
+        "file": "samples/houston_jun_2024_no_flood_control/delta_ndmi/openEO.tif",
+        "min": -0.5521712899208069,
+        "max": 0.8429544568061829,
+        "mean": 0.009977160021662712,
+        "std": 0.07618770748376846,
+        "p05": -0.1077200323343277,
+        "p50": 0.006605960428714752,
+        "p95": 0.1384359747171402,
+        "width": 1973,
+        "height": 1925,
+        "bounds": {
+          "left": 262910.0,
+          "bottom": 3285440.0,
+          "right": 282640.0,
+          "top": 3304690.0
+        },
+        "crs": "EPSG:32615"
+      }
+    }
+  },
+  "prediction": {
+    "risk_score": 0,
+    "predicted_risk_level": "Low",
+    "reasons": [
+      "AOI has high historical flood exposure, but this only increases concern when active triggers are present.",
+      "No rainfall trigger is present, so historical exposure and satellite changes are treated as context rather than active flood-risk evidence."
+    ]
+  },
+  "outputs": {
+    "delta_ndvi_tif": "samples/houston_jun_2024_no_flood_control/delta_ndvi/openEO.tif",
+    "delta_ndmi_tif": "samples/houston_jun_2024_no_flood_control/delta_ndmi/openEO.tif",
+    "sentinel1_summary_json": "samples/houston_jun_2024_no_flood_control/sentinel1/sentinel1_surface_water_summary.json",
+    "summary_json": "samples/houston_jun_2024_no_flood_control/aquabeacon_prediction_summary.json"
+  },
+  "known_event": false,
+  "explanation": "This prototype combines a historical AOI risk baseline with live/recent Copernicus-derived vegetation and moisture anomalies, rainfall input, and Sentinel-1 surface-water-change evidence. It outputs a Low/Medium/High rule-based predicted water-risk level."
+}

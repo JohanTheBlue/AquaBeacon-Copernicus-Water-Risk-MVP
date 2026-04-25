@@ -1,0 +1,97 @@
+{
+  "event_id": "budapest_parliament_sep_2024",
+  "aoi": {
+    "name": "Budapest Parliament Danube flood AOI",
+    "bbox": {
+      "west": 18.99,
+      "south": 47.49,
+      "east": 19.06,
+      "north": 47.53
+    }
+  },
+  "prediction_type": "historical-plus-live rule-based water-risk prediction prototype",
+  "collection": "SENTINEL2_L2A",
+  "baseline_period": [
+    "2024-08-15",
+    "2024-09-05"
+  ],
+  "recent_period": [
+    "2024-09-06",
+    "2024-09-13"
+  ],
+  "historical_risk": {
+    "label": "High",
+    "score": 2,
+    "source": "Budapest Danube river corridor / known Parliament-area flood event context"
+  },
+  "live_inputs": {
+    "forecast_rain_mm": 35.0,
+    "sentinel1_surface_water_change_percent": 5.000383991980631
+  },
+  "indicators": {
+    "delta_ndvi": {
+      "description": "Recent NDVI minus baseline NDVI",
+      "mean": -0.0010659315157681704,
+      "stats": {
+        "file": "samples/budapest_parliament_sep_2024/delta_ndvi/openEO.tif",
+        "min": -0.8944787979125977,
+        "max": 0.7220742702484131,
+        "mean": -0.0010659315157681704,
+        "std": 0.05568341538310051,
+        "p05": -0.06474286317825317,
+        "p50": -0.000857621431350708,
+        "p95": 0.06275749206542969,
+        "width": 539,
+        "height": 459,
+        "bounds": {
+          "left": 348590.0,
+          "bottom": 5261440.0,
+          "right": 353980.0,
+          "top": 5266030.0
+        },
+        "crs": "EPSG:32634"
+      }
+    },
+    "delta_ndmi": {
+      "description": "Recent NDMI minus baseline NDMI",
+      "mean": -0.01494662370532751,
+      "stats": {
+        "file": "samples/budapest_parliament_sep_2024/delta_ndmi/openEO.tif",
+        "min": -0.7996299266815186,
+        "max": 0.6544435024261475,
+        "mean": -0.01494662370532751,
+        "std": 0.05815638229250908,
+        "p05": -0.08511777967214584,
+        "p50": -0.015553295612335205,
+        "p95": 0.061879776418209076,
+        "width": 539,
+        "height": 459,
+        "bounds": {
+          "left": 348590.0,
+          "bottom": 5261440.0,
+          "right": 353980.0,
+          "top": 5266030.0
+        },
+        "crs": "EPSG:32634"
+      }
+    }
+  },
+  "prediction": {
+    "risk_score": 4,
+    "predicted_risk_level": "Medium",
+    "reasons": [
+      "AOI has high historical flood exposure, but this only increases concern when active triggers are present.",
+      "Rainfall exceeds 20 mm, indicating a possible water-risk trigger.",
+      "Historical AOI exposure contributes 2 points because an active rainfall trigger is present.",
+      "Sentinel-1 shows possible surface-water-change candidates during a rainfall-triggered event window."
+    ]
+  },
+  "outputs": {
+    "delta_ndvi_tif": "samples/budapest_parliament_sep_2024/delta_ndvi/openEO.tif",
+    "delta_ndmi_tif": "samples/budapest_parliament_sep_2024/delta_ndmi/openEO.tif",
+    "sentinel1_summary_json": "samples/budapest_parliament_sep_2024/sentinel1/sentinel1_surface_water_summary.json",
+    "summary_json": "samples/budapest_parliament_sep_2024/aquabeacon_prediction_summary.json"
+  },
+  "known_event": true,
+  "explanation": "This prototype combines a historical AOI risk baseline with live/recent Copernicus-derived vegetation and moisture anomalies, rainfall input, and Sentinel-1 surface-water-change evidence. It outputs a Low/Medium/High rule-based predicted water-risk level."
+}

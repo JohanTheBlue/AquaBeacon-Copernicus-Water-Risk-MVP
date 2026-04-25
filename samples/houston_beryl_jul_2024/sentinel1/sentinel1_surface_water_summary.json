@@ -1,0 +1,44 @@
+{
+  "event_id": "houston_beryl_jul_2024",
+  "aoi": {
+    "name": "Houston Hurricane Beryl urban flood AOI",
+    "bbox": {
+      "west": -95.45,
+      "south": 29.68,
+      "east": -95.25,
+      "north": 29.85
+    }
+  },
+  "collection": "SENTINEL1_GRD",
+  "indicator": "Sentinel-1 VV backscatter change",
+  "before_period": [
+    "2024-06-25",
+    "2024-07-07"
+  ],
+  "after_period": [
+    "2024-07-08",
+    "2024-07-18"
+  ],
+  "threshold_method": "5th percentile of VV delta",
+  "threshold_value": -0.28665775060653687,
+  "possible_surface_water_change_percent": 5.0000052659072525,
+  "mean_candidate_change": -1.729252815246582,
+  "min_candidate_change": -1705.554443359375,
+  "outputs": {
+    "delta_raster": "samples/houston_beryl_jul_2024/sentinel1/openEO.tif",
+    "candidate_mask": "samples/houston_beryl_jul_2024/sentinel1/sentinel1_surface_water_mask.tif",
+    "summary_json": "samples/houston_beryl_jul_2024/sentinel1/sentinel1_surface_water_summary.json"
+  },
+  "raster": {
+    "width": 1973,
+    "height": 1925,
+    "bounds": {
+      "left": 262910.0,
+      "bottom": 3285440.0,
+      "right": 282640.0,
+      "top": 3304690.0
+    },
+    "crs": "EPSG:32615"
+  },
+  "explanation": "Pixels with the strongest negative Sentinel-1 VV backscatter change between the before and after periods are flagged as possible surface-water-change candidates. This is not a confirmed flood map."
+}

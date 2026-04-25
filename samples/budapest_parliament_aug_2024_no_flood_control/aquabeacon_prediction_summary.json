@@ -1,0 +1,95 @@
+{
+  "event_id": "budapest_parliament_aug_2024_no_flood_control",
+  "aoi": {
+    "name": "Budapest Parliament Danube no-flood control AOI",
+    "bbox": {
+      "west": 18.99,
+      "south": 47.49,
+      "east": 19.06,
+      "north": 47.53
+    }
+  },
+  "prediction_type": "historical-plus-live rule-based water-risk prediction prototype",
+  "collection": "SENTINEL2_L2A",
+  "baseline_period": [
+    "2024-07-10",
+    "2024-07-25"
+  ],
+  "recent_period": [
+    "2024-08-01",
+    "2024-08-15"
+  ],
+  "historical_risk": {
+    "label": "High",
+    "score": 2,
+    "source": "Same Budapest Danube river corridor exposure as the known flood sample, but during a no-detected-flood control period."
+  },
+  "live_inputs": {
+    "forecast_rain_mm": 0.0,
+    "sentinel1_surface_water_change_percent": 5.000383991980631
+  },
+  "indicators": {
+    "delta_ndvi": {
+      "description": "Recent NDVI minus baseline NDVI",
+      "mean": 0.06319428235292435,
+      "stats": {
+        "file": "samples/budapest_parliament_aug_2024_no_flood_control/delta_ndvi/openEO.tif",
+        "min": -0.6264863014221191,
+        "max": 0.8123462796211243,
+        "mean": 0.06319428235292435,
+        "std": 0.15306441485881805,
+        "p05": -0.1788700819015503,
+        "p50": 0.048299431800842285,
+        "p95": 0.3442840576171875,
+        "width": 539,
+        "height": 459,
+        "bounds": {
+          "left": 348590.0,
+          "bottom": 5261440.0,
+          "right": 353980.0,
+          "top": 5266030.0
+        },
+        "crs": "EPSG:32634"
+      }
+    },
+    "delta_ndmi": {
+      "description": "Recent NDMI minus baseline NDMI",
+      "mean": -0.0917254239320755,
+      "stats": {
+        "file": "samples/budapest_parliament_aug_2024_no_flood_control/delta_ndmi/openEO.tif",
+        "min": -0.8363303542137146,
+        "max": 0.7217806577682495,
+        "mean": -0.0917254239320755,
+        "std": 0.11724736541509628,
+        "p05": -0.2770967483520508,
+        "p50": -0.09593839943408966,
+        "p95": 0.1117372214794159,
+        "width": 539,
+        "height": 459,
+        "bounds": {
+          "left": 348590.0,
+          "bottom": 5261440.0,
+          "right": 353980.0,
+          "top": 5266030.0
+        },
+        "crs": "EPSG:32634"
+      }
+    }
+  },
+  "prediction": {
+    "risk_score": 0,
+    "predicted_risk_level": "Low",
+    "reasons": [
+      "AOI has high historical flood exposure, but this only increases concern when active triggers are present.",
+      "No rainfall trigger is present, so historical exposure and satellite changes are treated as context rather than active flood-risk evidence."
+    ]
+  },
+  "outputs": {
+    "delta_ndvi_tif": "samples/budapest_parliament_aug_2024_no_flood_control/delta_ndvi/openEO.tif",
+    "delta_ndmi_tif": "samples/budapest_parliament_aug_2024_no_flood_control/delta_ndmi/openEO.tif",
+    "sentinel1_summary_json": "samples/budapest_parliament_aug_2024_no_flood_control/sentinel1/sentinel1_surface_water_summary.json",
+    "summary_json": "samples/budapest_parliament_aug_2024_no_flood_control/aquabeacon_prediction_summary.json"
+  },
+  "known_event": false,
+  "explanation": "This prototype combines a historical AOI risk baseline with live/recent Copernicus-derived vegetation and moisture anomalies, rainfall input, and Sentinel-1 surface-water-change evidence. It outputs a Low/Medium/High rule-based predicted water-risk level."
+}
