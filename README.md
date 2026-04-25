@@ -1,5 +1,9 @@
 # AquaBeacon
 
+## Dashboard Preview
+
+![AquaBeacon dashboard](screenshots/aquabeacon_dashboard.png)
+
 AquaBeacon is a lightweight Copernicus-based early-warning MVP for water-related environmental risk.
 
 It combines existing backend outputs from Sentinel-1, Sentinel-2, rainfall input, and historical AOI exposure into a simple, explainable Low / Medium / High risk signal shown in a Streamlit dashboard.
