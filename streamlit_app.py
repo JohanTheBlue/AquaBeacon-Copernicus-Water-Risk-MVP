@@ -10,9 +10,10 @@ import streamlit as st
 
 
 # ============================================================
-# AquaBeacon — Stable Native Streamlit Dashboard
-# Existing backend outputs only. No new model logic.
-# No custom HTML layout, so no visible </div> bugs.
+# AquaBeacon Command Center Frontend
+# - Uses existing AquaBeacon JSON/PNG sample outputs
+# - Adds Bubble-inspired dummy command-center pages/features
+# - No new model logic, APIs, databases, or live routing
 # ============================================================
 
 SAMPLES_DIR = Path("samples")
@@ -41,13 +42,6 @@ AOI_NAMES = {
     "houston_beryl_jul_2024": "Houston AOI",
 }
 
-SHORT_DESCRIPTIONS = {
-    "budapest_parliament_aug_2024_no_flood_control": "Same Danube-side AOI during a no-flood control window.",
-    "budapest_parliament_sep_2024": "Known Danube flood context near the Hungarian Parliament.",
-    "houston_jun_2024_no_flood_control": "Same Houston AOI before Hurricane Beryl.",
-    "houston_beryl_jul_2024": "Storm-impact sample with extreme rainfall input.",
-}
-
 MAP_FILES = {
     "Water risk composite": "sentinel1_surface_water_mask.png",
     "Sentinel-1 water candidates": "sentinel1_surface_water_mask.png",
@@ -56,10 +50,13 @@ MAP_FILES = {
 }
 
 PAGES = [
-    "⌂ Overview",
-    "▱ Map Layers",
-    "▥ Evidence",
-    "▤ Reports",
+    "🗺 Dashboard",
+    "⚠ Incidents",
+    "🕯 Alerts",
+    "📸 Monitoring Stations",
+    "🚩 Evacuation Routes",
+    "🗎 Historical Records",
+    "📍 Regions",
     "⚙ AOI Settings",
 ]
 
@@ -70,6 +67,9 @@ EXPECTED_ASSET_FILES = [
     "sentinel1_surface_water_mask.png",
 ]
 
+SEVERITY_ORDER = {"Critical": 0, "High": 1, "Moderate": 2, "Low": 3}
+RISK_TO_SEVERITY = {"Low": "Low", "Medium": "Moderate", "High": "High", "Unknown": "Low"}
+
 RISK_STYLE = {
     "Low": {"emoji": "🟢", "label": "Low", "action": "Routine monitoring"},
     "Medium": {"emoji": "🟡", "label": "Medium", "action": "Review local conditions"},
@@ -77,23 +77,121 @@ RISK_STYLE = {
     "Unknown": {"emoji": "⚪", "label": "Unknown", "action": "Check backend outputs"},
 }
 
+DUMMY_REGIONS = [
+    {
+        "region": "Coastal Surge Zone Alpha",
+        "risk": "Critical",
+        "status": "Active response",
+        "population": "42,000",
+        "notes": "Dense low-lying coastal area with storm-surge exposure.",
+    },
+    {
+        "region": "Northern Delta Basin",
+        "risk": "High",
+        "status": "Heightened monitoring",
+        "population": "31,500",
+        "notes": "River-adjacent basin with floodplain exposure.",
+    },
+    {
+        "region": "Highland Watershed District",
+        "risk": "Moderate",
+        "status": "Watch",
+        "population": "18,200",
+        "notes": "Watershed and landslide-prone terrain.",
+    },
+    {
+        "region": "Southern Lowland Plains",
+        "risk": "Low",
+        "status": "Routine monitoring",
+        "population": "25,800",
+        "notes": "Baseline control region for non-emergency comparison.",
+    },
+]
+
+DUMMY_INCIDENTS = [
+    {"type": "Water Contamination", "severity": "Critical", "region": "Coastal Surge Zone Alpha", "reported": "13:48", "status": "Uncontained"},
+    {"type": "Flash Flood", "severity": "High", "region": "Coastal Surge Zone Alpha", "reported": "13:48", "status": "Active"},
+    {"type": "Flood", "severity": "High", "region": "Northern Delta Basin", "reported": "13:55", "status": "Active"},
+    {"type": "Storm Surge", "severity": "Moderate", "region": "Highland Watershed District", "reported": "13:55", "status": "Monitoring"},
+    {"type": "Drought", "severity": "Low", "region": "Southern Lowland Plains", "reported": "13:55", "status": "Advisory"},
+    {"type": "Landslide", "severity": "Low", "region": "Southern Lowland Plains", "reported": "13:48", "status": "Monitoring"},
+]
+
+DUMMY_ALERTS = [
+    {
+        "level": "Emergency",
+        "title": "Dam Breach Active Response",
+        "message": "Evacuation route published. Follow designated route and report to assembly points.",
+        "incident": "Dam Breach",
+        "region": "Northern Delta Basin",
+        "issued": "13:48",
+    },
+    {
+        "level": "Emergency",
+        "title": "Active Flood Response",
+        "message": "Residents in low-lying areas should evacuate immediately via designated routes.",
+        "incident": "Flood",
+        "region": "Northern Delta Basin",
+        "issued": "13:55",
+    },
+    {
+        "level": "Warning",
+        "title": "Storm Surge Infrastructure Watch",
+        "message": "Infrastructure assessment ongoing. Avoid damaged road sections.",
+        "incident": "Storm Surge",
+        "region": "Highland Watershed District",
+        "issued": "13:48",
+    },
+    {
+        "level": "Advisory",
+        "title": "Drought Conditions Persist",
+        "message": "Conserve water resources and follow rationing guidance from local authorities.",
+        "incident": "Drought",
+        "region": "Southern Lowland Plains",
+        "issued": "13:48",
+    },
+]
+
+DUMMY_STATIONS = [
+    {"station": "Station A-01", "region": "Coastal Surge Zone Alpha", "type": "Water level", "status": "Online", "last": "2 min ago", "value": "High"},
+    {"station": "Station B-14", "region": "Northern Delta Basin", "type": "Rain gauge", "status": "Online", "last": "5 min ago", "value": "80 mm"},
+    {"station": "Station C-08", "region": "Highland Watershed District", "type": "Soil moisture", "status": "Delayed", "last": "24 min ago", "value": "Moderate"},
+    {"station": "Station D-22", "region": "Southern Lowland Plains", "type": "Field camera", "status": "Online", "last": "3 min ago", "value": "Normal"},
+]
+
+DUMMY_RECORDS = [
+    {"date": "2024-09-21", "event": "Budapest Danube flood context", "risk": "Medium", "source": "AquaBeacon sample"},
+    {"date": "2024-08-15", "event": "Budapest no-flood control", "risk": "Low", "source": "AquaBeacon sample"},
+    {"date": "2024-07-08", "event": "Houston Hurricane Beryl impact", "risk": "High", "source": "AquaBeacon sample"},
+    {"date": "2024-06-20", "event": "Houston no-flood control", "risk": "Low", "source": "AquaBeacon sample"},
+]
+
 
 st.set_page_config(
-    page_title="AquaBeacon Water Risk Overview",
+    page_title="AquaBeacon Command Center",
     page_icon="🌊",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
 
-# Minimal safe CSS only. Do not hide the Streamlit header/sidebar controls.
+# Minimal safe styling only. Avoid complex custom HTML layouts.
 st.markdown(
     """
     <style>
         .block-container {
-            max-width: 1400px;
+            max-width: 1450px;
             padding-top: 1rem;
             padding-bottom: 2rem;
+        }
+        .ab-small {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        .ab-title-note {
+            color: #475569;
+            font-size: 1rem;
+            margin-top: -0.5rem;
         }
     </style>
     """,
@@ -280,8 +378,33 @@ def health_check(overview: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def make_incidents_from_aquabeacon(overview: pd.DataFrame) -> list[dict[str, Any]]:
+    rows = []
+    for _, row in overview.iterrows():
+        event_id = row.get("event_id", "")
+        risk = row.get("predicted_risk_level", "Unknown")
+        severity = RISK_TO_SEVERITY.get(str(risk), "Low")
+        rows.append({
+            "type": "AquaBeacon AOI Risk",
+            "severity": severity,
+            "region": AOI_NAMES.get(event_id, event_id),
+            "reported": "sample output",
+            "status": f"{risk} risk",
+            "source": FRIENDLY_NAMES.get(event_id, event_id),
+        })
+    return rows
+
+
+def severity_filter_df(rows: list[dict[str, Any]]) -> pd.DataFrame:
+    df = pd.DataFrame(rows)
+    if "severity" in df.columns:
+        df["_order"] = df["severity"].map(lambda x: SEVERITY_ORDER.get(str(x), 9))
+        df = df.sort_values("_order").drop(columns=["_order"])
+    return df
+
+
 # -----------------------------
-# Sidebar
+# Load app data
 # -----------------------------
 
 overview = load_overview()
@@ -291,24 +414,29 @@ if not events:
     st.error("No demo events found in overview.")
     st.stop()
 
+
+# -----------------------------
+# Sidebar
+# -----------------------------
+
 with st.sidebar:
     if LOGO_PATH.exists():
         st.image(str(LOGO_PATH), width=170)
     else:
         st.title("🌊 AquaBeacon")
 
-    page = st.radio("Navigation", PAGES)
+    page = st.radio("Command Navigation", PAGES)
 
     current_event_id = normalize_event_id(st.session_state.get("selected_event_id", events[0]))
     selected_event_id = st.selectbox(
-        "Demo sample",
+        "AquaBeacon sample",
         events,
         index=events.index(current_event_id) if current_event_id in events else 0,
         format_func=lambda event_id: FRIENDLY_NAMES.get(event_id, event_id),
     )
     st.session_state["selected_event_id"] = selected_event_id
 
-    st.info("AquaBeacon is a Copernicus-based water-risk MVP for decision support.")
+    st.info("Monitor water risk, routes, alerts, and response context. Dummy command-center features are clearly separated from AquaBeacon outputs.")
 
 
 summary = get_summary(selected_event_id)
@@ -320,19 +448,21 @@ risk_style = RISK_STYLE.get(risk, RISK_STYLE["Unknown"])
 # Header
 # -----------------------------
 
-st.title("🌊 AquaBeacon — Water Risk Overview")
+st.title("🌊 AquaBeacon Command Center")
+st.markdown(
+    "<div class='ab-title-note'>COMMAND CENTER · LIVE FEED · Copernicus-based water-risk MVP</div>",
+    unsafe_allow_html=True,
+)
 
-header_cols = st.columns([0.34, 0.26, 0.2, 0.2])
-with header_cols[0]:
+h1, h2, h3, h4 = st.columns([0.28, 0.32, 0.2, 0.2])
+with h1:
     st.write(f"**AOI:** {AOI_NAMES.get(selected_event_id, 'Selected AOI')}")
-with header_cols[1]:
+with h2:
     st.write(f"**Sample:** {FRIENDLY_NAMES.get(selected_event_id, selected_event_id)}")
-with header_cols[2]:
-    st.write(f"**Window:** {get_window(summary)}")
-with header_cols[3]:
-    st.write(f"**Label:** {get_label(summary)}")
-
-st.caption(SHORT_DESCRIPTIONS.get(selected_event_id, "Selected AquaBeacon sample."))
+with h3:
+    st.write(f"**Risk:** {risk_style['emoji']} {risk}")
+with h4:
+    st.write(f"**Score:** {score}")
 
 st.divider()
 
@@ -341,28 +471,19 @@ st.divider()
 # Shared render functions
 # -----------------------------
 
-def render_risk_panel() -> None:
-    left, right = st.columns([0.45, 0.55])
-
-    with left:
-        st.subheader("Current Risk Level")
-        st.metric(
-            label="Risk",
-            value=f"{risk_style['emoji']} {risk}",
-            delta=f"Score {score}",
-            delta_color="off",
-        )
-        st.info(risk_interpretation(risk))
-
-    with right:
-        st.subheader("Key indicators")
-        k1, k2 = st.columns(2)
-        with k1:
-            st.metric("Rainfall input", f"{safe_get(summary, ['live_inputs', 'forecast_rain_mm'], '—')} mm")
-            st.metric("NDVI mean", safe_get(summary, ["indicators", "delta_ndvi", "mean"], "—"))
-        with k2:
-            st.metric("S1 candidates", f"{safe_get(summary, ['live_inputs', 'sentinel1_surface_water_change_percent'], '—')}%")
-            st.metric("NDMI mean", safe_get(summary, ["indicators", "delta_ndmi", "mean"], "—"))
+def render_kpis() -> None:
+    active_events = len(DUMMY_INCIDENTS) + len(make_incidents_from_aquabeacon(overview))
+    emergency_count = sum(1 for a in DUMMY_ALERTS if a["level"] == "Emergency")
+    affected_regions = len({r["region"] for r in DUMMY_REGIONS})
+    k1, k2, k3, k4 = st.columns(4)
+    with k1:
+        st.metric("Total Active Events", active_events, help="Dummy command-center incidents plus AquaBeacon sample incidents.")
+    with k2:
+        st.metric("Emergency Alerts", emergency_count)
+    with k3:
+        st.metric("Affected Regions", affected_regions)
+    with k4:
+        st.metric("Selected AOI Risk", f"{risk_style['emoji']} {risk}", delta=f"Score {score}", delta_color="off")
 
 
 def render_map_view(default_layer: str = "Water risk composite") -> None:
@@ -374,20 +495,73 @@ def render_map_view(default_layer: str = "Water risk composite") -> None:
     )
     image_path = SAMPLES_DIR / selected_event_id / MAP_FILES[layer]
 
-    st.subheader(f"▱ Map View — {layer}")
-    st.caption("Lightweight evidence-layer viewer from existing PNG outputs. This is not a live GIS map.")
+    st.subheader(f"🗺 Live Risk Map — {layer}")
+    st.caption("Existing PNG evidence-layer viewer. This is not a live GIS service.")
 
     if image_path.exists():
         st.image(str(image_path), width="stretch")
     else:
         st.warning(f"Missing map layer: {image_path}")
 
-    st.caption("Evidence layers support the score but do not represent confirmed flood extent.")
+    st.caption("Low / Moderate / High / Critical labels in the command center are UI status categories. AquaBeacon's real score is the selected AOI risk above.")
+
+
+def render_aquabeacon_risk_panel() -> None:
+    left, right = st.columns([0.45, 0.55])
+
+    with left:
+        st.subheader("AquaBeacon Risk Output")
+        st.metric(
+            label="Risk level",
+            value=f"{risk_style['emoji']} {risk}",
+            delta=f"Score {score}",
+            delta_color="off",
+        )
+        st.info(risk_interpretation(risk))
+
+    with right:
+        st.subheader("Key Signals")
+        k1, k2 = st.columns(2)
+        with k1:
+            st.metric("Rainfall input", f"{safe_get(summary, ['live_inputs', 'forecast_rain_mm'], '—')} mm")
+            st.metric("NDVI mean", safe_get(summary, ["indicators", "delta_ndvi", "mean"], "—"))
+        with k2:
+            st.metric("S1 candidates", f"{safe_get(summary, ['live_inputs', 'sentinel1_surface_water_change_percent'], '—')}%")
+            st.metric("NDMI mean", safe_get(summary, ["indicators", "delta_ndmi", "mean"], "—"))
+
+
+def render_recent_incidents() -> None:
+    st.subheader("Recent Active Incidents")
+    rows = make_incidents_from_aquabeacon(overview) + DUMMY_INCIDENTS
+    df = severity_filter_df(rows)
+    st.dataframe(df, hide_index=True, width="stretch")
+
+    selected_incident = st.selectbox(
+        "Select incident for route request",
+        [f"{r['type']} — {r['region']}" for r in rows],
+    )
+    if st.button("Request AI Evacuation Routes", width="stretch"):
+        st.success(f"Dummy route request generated for: {selected_incident}")
+
+
+def render_alert_cards() -> None:
+    st.subheader("Active Alerts")
+    st.caption("Unresolved advisories, watches, warnings, and emergencies. These are dummy operational UI items.")
+
+    for alert in DUMMY_ALERTS:
+        with st.container(border=True):
+            c1, c2 = st.columns([0.72, 0.28])
+            with c1:
+                st.write(f"**{alert['level']}: {alert['title']}**")
+                st.write(alert["message"])
+                st.caption(f"Linked Incident: {alert['incident']} · Linked Region: {alert['region']} · Issued {alert['issued']}")
+            with c2:
+                st.button("Resolve", key=f"resolve_{alert['title']}", width="stretch")
+                st.button("Escalate", key=f"escalate_{alert['title']}", width="stretch")
 
 
 def render_evidence() -> None:
-    st.subheader("▥ Evidence")
-
+    st.subheader("AquaBeacon Evidence")
     reasons = summary.get("prediction", {}).get("reasons", [])
     if reasons:
         for reason in reasons:
@@ -413,16 +587,17 @@ def render_evidence() -> None:
 
 
 def render_report() -> None:
-    st.subheader("▤ Decision-Maker Report")
+    st.subheader("Decision-Maker Report")
+    st.write(f"**AOI label:** {get_label(summary)}")
+    st.write(f"**Observation window:** {get_window(summary)}")
     st.write(f"**Risk summary:** {risk_interpretation(risk)}")
     st.write(f"**Suggested action:** {recommended_action(risk)}")
-    st.write(
-        "**Limitations:** AquaBeacon is an early-warning MVP. "
-        "It is not a confirmed flood-extent map and not a hydrological forecast model."
+    st.warning(
+        "Prototype note: AquaBeacon is an early-warning MVP. It is not a confirmed flood-extent map and not a hydrological forecast model."
     )
 
     st.download_button(
-        "⬆ Export Report",
+        "⬆ Export AquaBeacon Report",
         data=build_report(selected_event_id, summary),
         file_name=f"{selected_event_id}_aquabeacon_report.md",
         mime="text/markdown",
@@ -430,46 +605,128 @@ def render_report() -> None:
     )
 
 
+def render_stations() -> None:
+    st.subheader("Monitoring Stations")
+    st.caption("Dummy field-monitoring feature based on the teammate frontend concept.")
+    st.dataframe(pd.DataFrame(DUMMY_STATIONS), hide_index=True, width="stretch")
+
+    with st.expander("Add station — dummy form"):
+        with st.form("station_form"):
+            st.text_input("Station name")
+            st.selectbox("Station type", ["Water level", "Rain gauge", "Soil moisture", "Field camera"])
+            st.selectbox("Region", [r["region"] for r in DUMMY_REGIONS])
+            submitted = st.form_submit_button("Save dummy station")
+            if submitted:
+                st.success("Dummy station saved for presentation purposes.")
+
+
+def render_routes() -> None:
+    st.subheader("AI Evacuation Routes")
+    st.caption("Dummy route-generation UI. No live routing API is connected.")
+
+    incidents = make_incidents_from_aquabeacon(overview) + DUMMY_INCIDENTS
+    selected = st.selectbox(
+        "Active incident",
+        [f"{i['type']} — {i['region']} ({i['severity']})" for i in incidents],
+    )
+
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric("Primary route", "Route A")
+    with col2:
+        st.metric("Estimated clearance", "24 min")
+    with col3:
+        st.metric("Status", "Draft")
+
+    st.info(f"Dummy route generated for {selected}. In a future version, this could connect to routing and road-closure data.")
+    if st.button("Publish route as alert", width="stretch"):
+        st.success("Dummy route published to alert feed.")
+
+
+def render_records() -> None:
+    st.subheader("Historical Records")
+    st.caption("AquaBeacon sample history plus dummy command-center records.")
+    records = DUMMY_RECORDS + [
+        {"date": "demo", "event": r["type"], "risk": r["severity"], "source": "Dummy command-center incident"}
+        for r in DUMMY_INCIDENTS
+    ]
+    st.dataframe(pd.DataFrame(records), hide_index=True, width="stretch")
+
+
+def render_regions() -> None:
+    st.subheader("Regions")
+    st.caption("Dummy region registry used by the command-center UI.")
+    st.dataframe(pd.DataFrame(DUMMY_REGIONS), hide_index=True, width="stretch")
+
+
+def render_settings() -> None:
+    st.subheader("AOI Settings")
+    st.caption("Read-only demo settings. No model configuration is changed here.")
+    c1, c2 = st.columns([0.4, 0.6])
+    with c1:
+        st.write(f"**AOI:** {AOI_NAMES.get(selected_event_id, 'Selected AOI')}")
+        st.write(f"**Sample:** {FRIENDLY_NAMES.get(selected_event_id, selected_event_id)}")
+        st.write(f"**Label:** {get_label(summary)}")
+        st.write(f"**Window:** {get_window(summary)}")
+        st.write(f"**Risk:** {risk} / Score {score}")
+    with c2:
+        st.write("**Demo health check**")
+        st.dataframe(health_check(overview), hide_index=True, width="stretch")
+
+
 # -----------------------------
 # Pages
 # -----------------------------
 
-if page == "⌂ Overview":
-    top_left, top_right = st.columns([0.52, 0.48], gap="large")
-    with top_left:
+if page == "🗺 Dashboard":
+    st.subheader("Risk Monitoring Dashboard")
+    st.caption("Real-time situational awareness style view using AquaBeacon sample outputs plus dummy command-center features.")
+
+    render_kpis()
+
+    c_left, c_right = st.columns([0.55, 0.45], gap="large")
+    with c_left:
         render_map_view()
-    with top_right:
-        render_risk_panel()
-        render_report()
+    with c_right:
+        render_aquabeacon_risk_panel()
+        st.divider()
+        render_recent_incidents()
 
-elif page == "▱ Map Layers":
-    render_map_view()
+    st.divider()
+    render_alert_cards()
 
-elif page == "▥ Evidence":
-    render_risk_panel()
-    render_evidence()
+elif page == "⚠ Incidents":
+    render_recent_incidents()
 
-elif page == "▤ Reports":
-    render_report()
+elif page == "🕯 Alerts":
+    render_alert_cards()
+
+elif page == "📸 Monitoring Stations":
+    render_stations()
+
+elif page == "🚩 Evacuation Routes":
+    render_routes()
+
+elif page == "🗎 Historical Records":
+    render_records()
+
+elif page == "📍 Regions":
+    render_regions()
 
 elif page == "⚙ AOI Settings":
-    st.subheader("⚙ AOI Settings")
-    st.caption("Read-only demo settings. No model configuration is changed here.")
-    st.write(f"**AOI:** {AOI_NAMES.get(selected_event_id, 'Selected AOI')}")
-    st.write(f"**Sample:** {FRIENDLY_NAMES.get(selected_event_id, selected_event_id)}")
-    st.write(f"**Label:** {get_label(summary)}")
-    st.write(f"**Window:** {get_window(summary)}")
-    st.write(f"**Risk:** {risk} / Score {score}")
-    st.dataframe(health_check(overview), hide_index=True, width="stretch")
+    render_settings()
 
 
 st.divider()
 
-with st.expander("Compare all demo samples"):
-    st.dataframe(overview_table(overview), hide_index=True, width="stretch")
+with st.expander("AquaBeacon evidence"):
+    render_evidence()
 
-with st.expander("Demo health check"):
-    st.dataframe(health_check(overview), hide_index=True, width="stretch")
+with st.expander("Decision-maker report"):
+    render_report()
+
+with st.expander("Compare AquaBeacon demo samples"):
+    st.dataframe(overview_table(overview), hide_index=True, width="stretch")
 
 with st.expander("Data sources and prototype scope"):
     st.write(
@@ -477,6 +734,6 @@ with st.expander("Data sources and prototype scope"):
         "historical AOI exposure, and AquaBeacon rule-based scoring outputs."
     )
     st.write(
-        "Scope: This MVP is a transparent early-warning prototype. It does not ingest river gauges, "
-        "perform hydrological routing, or provide confirmed flood-extent mapping."
+        "Scope: The command-center pages include dummy UI features. The real MVP output is the AquaBeacon "
+        "risk score, JSON summaries, and PNG evidence layers."
     )
